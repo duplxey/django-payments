@@ -58,6 +58,7 @@ class MercadoPagoProvider(BasicProvider):
             raise ValueError("This payment does not have a preference.")
 
         result = self.client.preference().get(payment.transaction_id)
+        logger.error("MP client", exc_info=True)
 
         if result["status"] >= 300:
             raise Exception("Failed to retrieve MercadoPago preference.", result)
@@ -101,6 +102,7 @@ class MercadoPagoProvider(BasicProvider):
 
         logger.debug("Creating preference with payload: %s", payload)
         result = self.client.preference().create(payload)
+        logger.error("MP client", exc_info=True)
 
         if result["status"] >= 300:
             raise Exception("Failed to create MercadoPago preference.", result)
@@ -155,6 +157,7 @@ class MercadoPagoProvider(BasicProvider):
         :param colection_id: The collection_id we got from MercadoPago.
         """
         response = self.client.payment().get(collection_id)
+        logger.error("MP client", exc_info=True)
         if response["status"] != 200:
             message = "MercadoPago sent invalid payment data."
             # Maybe if it's previously approved keep it that way?
@@ -203,6 +206,7 @@ class MercadoPagoProvider(BasicProvider):
                 "external_reference": payment.attrs.external_reference,
             }
         )
+        logger.error("MP client", exc_info=True)
 
         logger.info("Found payment info for %s: %s.", payment, data)
 
